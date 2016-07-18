@@ -24,9 +24,9 @@ function Paddle:draw()
 end
 
 function Paddle:update(dt)
-	if love.keyboard.isDown(self.upkey) and self.y > 0 then
+	if love.keyboard.isDown(self.upKey) and self.y > 0 then
 		self.y = self.y - dt * self.speed
-	elseif love.keyboard.isDown(self.downkey) and self.y < height - self.height then
+	elseif love.keyboard.isDown(self.downKey) and self.y < height - self.height then
 		self.y = self.y + dt * self.speed
 	end
 end

@@ -21,14 +21,16 @@ function Ball:update(dt)
     local leftScore = entities.leftScore
     local rightScore = entities.rightScore
 
-    if self.x < 0 or self.x > width then
-        if self.x < 0 then
+    if self.x + self.width < 0 or self.x - self.width > width then
+        if self.x + self.width < 0 then
             leftScore.score = leftScore.score + 1
         else
             rightScore.score = rightScore.score + 1
         end
         gameState = 'center'
         self:initialize()
+        entities.leftPaddle:initialize()
+        entities.rightPaddle:initialize()
         return
     end
 
@@ -42,22 +44,20 @@ function Ball:update(dt)
 end
 
 function Ball:hitPaddle(paddle)
-    if self.y + self.height / 2 < paddle.y + paddle.height / 2 or
-        self.y - self.height / 2 > paddle.y - paddle.height / 2 then
-        
-        -- TODO: check x position
+    if not CheckEntityCollision(self, paddle) then
+        return
+    end
 
-        self.velocity.x = -self.velocity.x
-        if love.keyboard.isDown(paddle.upKey) then
+    self.velocity.x = -self.velocity.x
+    if love.keyboard.isDown(paddle.upKey) then
+        self.velocity.y = -self.speed
+    elseif love.keyboard.isDown(paddle.downKey) then
+        self.velocity.y = self.speed
+    else 
+        if math.random(0,1) == 0 then
             self.velocity.y = -self.speed
-        elseif love.keyboard.isDown(paddle.downKey) then
+        else
             self.velocity.y = self.speed
-        else 
-            if math.random(0,1) == 0 then
-                self.velocity.y = -self.speed
-            else
-                self.velocity.y = self.speed
-            end
         end
     end
 end

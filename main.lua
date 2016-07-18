@@ -4,14 +4,17 @@ require "lib/lovedebug"
 require 'paddle'
 require 'score'
 require 'ball'
+require 'util'
 
 -- _DebugSettings.LiveAuto = true
 
-function love.load(arg)
-	math.randomseed(os.time())
+entities = {}
+gameState = 'center'
 
-	entities = {}
-	gameState = 'center'
+function love.load(arg)
+  	--if arg[#arg] == "-debug" then require("mobdebug").start() end
+  
+	math.randomseed(os.time())
 
 	width, height = love.graphics.getDimensions()
 
