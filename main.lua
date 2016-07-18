@@ -1,27 +1,40 @@
 class = require 'lib/middleclass'
+require "lib/lovedebug"
 
 require 'paddle'
+require 'score'
+require 'ball'
+
+-- _DebugSettings.LiveAuto = true
 
 function love.load(arg)
-	leftPaddle = Paddle:new("left")
-	rightPaddle = Paddle:new("right")
+	math.randomseed(os.time())
+
+	entities = {}
+	gameState = 'center'
+
+	width, height = love.graphics.getDimensions()
+
+	entities.leftPaddle = Paddle:new('left')
+	entities.rightPaddle = Paddle:new('right')
+	entities.leftScore = Score:new('left')
+	entities.rightScore = Score:new('right')
+	entities.ball = Ball:new()
 end
 
 function love.update(dt)
-	if love.keyboard.isDown("down") then
-		rightPaddle:update("down", dt)
-	elseif love.keyboard.isDown("up") then
-		rightPaddle:update("up", dt)
+	if gameState == 'center' and love.keyboard.isDown('return') then
+		gameState = 'moving'
+		entities.ball:start()
 	end
 
-	if love.keyboard.isDown("w") then
-		leftPaddle:update("up", dt)
-	elseif love.keyboard.isDown("s") then
-		leftPaddle:update("down", dt)
+	for _,v in pairs(entities) do
+		v:update(dt)
 	end
 end
 
 function love.draw()
-    rightPaddle:draw()
-    leftPaddle:draw()
+	for _,v in pairs(entities) do
+		v:draw()
+	end
 end
